@@ -25,6 +25,17 @@ public class Graph{
         }
     }
 
+    public void removeEdge(int u, int v){
+        if (this.graph.get(u).contains(v)){
+            for (int i = 0; i < this.graph.get(u).size(); i++)
+            {
+                if (this.graph.get(u).get(i) == v){
+                    this.graph.get(u).remove(i);
+                }
+            }
+        }
+    }
+
     public boolean hasEdge(int u, int v){
         return this.graph.get(u).contains(v);
     }
