@@ -1,7 +1,8 @@
 public class Maze{
     private int size;
     private int[][] nodes;
-    private Graph graph;
+    private Graph graph; // represents the walls
+    private Graph spanningTree; // represents the paths between nodes
 
     public Maze(int size){
         this.size = size;
@@ -38,13 +39,31 @@ public class Maze{
         }
     }
 
+    public void generateMaze(){
+        this.spanningTree = graph.getSpanningTree(0, this.size*this.size-1);
+        // remove edges that are in the spanningTree from graph
+        for (int i = 0; i < this.graph.getNumNodes(); i++){
+            for (int j = 0; j < this.graph.getNumNodes(); j++){
+                if (this.spanningTree.hasEdge(i,j)){
+                    this.graph.removeEdge(i,j);
+                }
+            }
+        }
+    }
+
     public void print(){
-        String result = "";
+        String result = " "+"__".repeat(this.size-1)+"_";
+        result+='\n';
+        
         for (int i = 0; i < this.size; i++){
+            result+="|";
             for (int j = 0; j < this.size; j++){
                 int node = this.nodes[i][j];
                 // check the floor
                 if (i < this.size-1 && this.graph.hasEdge(node, this.nodes[i+1][j])){
+                    result+="_";
+                }
+                else if (i == this.size-1){
                     result+="_";
                 }
                 else{
@@ -54,17 +73,21 @@ public class Maze{
                 if (j < this.size-1 && this.graph.hasEdge(node, this.nodes[i][j+1])){
                     result+="|";
                 }
-                else{
+                else if (j < this.size-1 && i < this.size-1){
                     result+=" ";
                 }
+                else if (i == this.size-1 && j < this.size-1){
+                    result+="_";
+                }
             }
-            result+="\n";
+            result+="|\n";
         }
         System.out.println(result);
     }
     public static void main(String[] args){
         System.out.println("Welcome to 2D Maze");
-        Maze maze = new Maze(5);
+        Maze maze = new Maze(30);
+        maze.generateMaze();
         maze.print();
     }
 }
