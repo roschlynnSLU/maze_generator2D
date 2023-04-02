@@ -86,7 +86,7 @@ public class Maze{
     }
     public static void main(String[] args){
         System.out.println("Welcome to 2D Maze");
-        Maze maze = new Maze(30);
+        Maze maze = new Maze(20);
         maze.generateMaze();
         maze.print();
     }
