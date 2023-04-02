@@ -39,12 +39,18 @@ public class Maze{
     }
 
     public void print(){
-        String result = "";
+        String result = " "+"_ ".repeat(this.size-1)+"_";
+        result+='\n';
+        
         for (int i = 0; i < this.size; i++){
+            result+="|";
             for (int j = 0; j < this.size; j++){
                 int node = this.nodes[i][j];
                 // check the floor
                 if (i < this.size-1 && this.graph.hasEdge(node, this.nodes[i+1][j])){
+                    result+="_";
+                }
+                else if (i == this.size-1){
                     result+="_";
                 }
                 else{
@@ -54,11 +60,14 @@ public class Maze{
                 if (j < this.size-1 && this.graph.hasEdge(node, this.nodes[i][j+1])){
                     result+="|";
                 }
-                else{
+                else if (j < this.size-1 && i < this.size-1){
                     result+=" ";
                 }
+                else if (i == this.size-1 && j < this.size-1){
+                    result+="_";
+                }
             }
-            result+="\n";
+            result+="|\n";
         }
         System.out.println(result);
     }
