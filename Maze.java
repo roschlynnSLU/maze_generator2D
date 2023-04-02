@@ -52,7 +52,7 @@ public class Maze{
     }
 
     public void print(){
-        String result = " "+"__".repeat(this.size-1)+"_";
+        String result = " "+"_ ".repeat(this.size-1)+"_";
         result+='\n';
         
         for (int i = 0; i < this.size; i++){
