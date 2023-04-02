@@ -45,7 +45,7 @@ public class Graph{
         return this.graph.get(u).contains(v);
     }
 
-    public Graph getSpanningTree(int start, int end){
+    public Graph getSpanningTree(int start){
         Graph spanningTree = new Graph(this.numNodes);
         ArrayList<Integer> stack = new ArrayList<Integer>();
         stack.add(start);

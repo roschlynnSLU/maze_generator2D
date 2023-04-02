@@ -40,7 +40,7 @@ public class Maze{
     }
 
     public void generateMaze(){
-        this.spanningTree = graph.getSpanningTree(0, this.size*this.size-1);
+        this.spanningTree = graph.getSpanningTree(0);
         // remove edges that are in the spanningTree from graph
         for (int i = 0; i < this.graph.getNumNodes(); i++){
             for (int j = 0; j < this.graph.getNumNodes(); j++){

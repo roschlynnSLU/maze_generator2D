@@ -1,3 +1,5 @@
+import random
+
 class Graph:
     def __init__(self, num_nodes):
         self.num_nodes = num_nodes
@@ -20,6 +22,32 @@ class Graph:
             if v in self.graph[u]:
                 result = True
         return result
+
+    def get_spanning_tree(self, start):
+        spanning_tree = Graph(self.num_nodes)
+        stack = []
+        visited = [False]*self.num_nodes
+
+        visited[start] = True
+        stack.append(start)
+        while stack:
+            node = stack[len(stack)-1]
+            unvisited_nodes = []
+            for next_node in self.graph[node]:
+                if not visited[next_node]:
+                    unvisited_nodes.append(next_node)
+            if unvisited_nodes:
+                next_node = random.choice(unvisited_nodes)
+                stack.append(next_node)
+                visited[next_node] = True
+                spanning_tree.add_edge(node, next_node)
+                spanning_tree.add_edge(next_node, node)
+            else:
+                stack.pop()
+
+        return spanning_tree
+
+
 
 class Maze:
     def __init__(self, size):
@@ -49,6 +77,13 @@ class Maze:
                 if j < self.size-1:
                     right = self.nodes[i][j+1]
                     self.graph.add_edge(node, right)
+    
+    def generate_maze(self):
+        spanning_tree = self.graph.get_spanning_tree(0)
+        for i in range(0, self.graph.num_nodes):
+            for j in range(0, self.graph.num_nodes):
+                if spanning_tree.has_edge(i, j):
+                    self.graph.remove_edge(i, j);
                     
     def print(self):
         result = ' '+('_ ' * (self.size-1))+'_\n'
@@ -76,6 +111,7 @@ class Maze:
 
 
 
-maze = Maze(5)
+maze = Maze(20)
+maze.generate_maze()
 maze.print()
 print("Welcome to 2D maze")
