@@ -51,12 +51,15 @@ class Maze:
                     self.graph.add_edge(node, right)
                     
     def print(self):
-        result = ''
+        result = ' '+('_ ' * (self.size-1))+'_\n'
         for i in range(self.size):
+            result+='|'
             for j in range(self.size):
                 node = self.nodes[i][j]
                 # check the floor (bottom wall)
                 if i < self.size-1 and self.graph.has_edge(node, self.nodes[i+1][j]):
+                    result+='_'
+                elif (i == self.size-1):
                     result+='_'
                 else:
                     result+=' '
@@ -64,10 +67,13 @@ class Maze:
                 # check the right wall
                 if j < self.size-1 and self.graph.has_edge(node, self.nodes[i][j+1]):
                     result+='|'
-                else:
+                elif i < self.size-1 and j < self.size-1:
                     result+=' '
-            result+='\n'
+                elif i == self.size-1 and j < self.size-1:
+                    result+='_'
+            result+='|\n'
         print(result)
+
 
 
 maze = Maze(5)
