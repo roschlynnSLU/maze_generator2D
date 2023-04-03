@@ -1,7 +1,8 @@
 public class Maze{
     private int size;
     private int[][] nodes;
-    private Graph graph;
+    private Graph graph; // represents the walls
+    private Graph spanningTree; // represents the paths between nodes
 
     public Maze(int size){
         this.size = size;
@@ -33,6 +34,18 @@ public class Maze{
                 if (j < size-1){
                     int right = this.nodes[i][j+1];
                     this.graph.addEdge(node, right);
+                }
+            }
+        }
+    }
+
+    public void generateMaze(){
+        this.spanningTree = graph.getSpanningTree(0);
+        // remove edges that are in the spanningTree from graph
+        for (int i = 0; i < this.graph.getNumNodes(); i++){
+            for (int j = 0; j < this.graph.getNumNodes(); j++){
+                if (this.spanningTree.hasEdge(i,j)){
+                    this.graph.removeEdge(i,j);
                 }
             }
         }
@@ -73,7 +86,8 @@ public class Maze{
     }
     public static void main(String[] args){
         System.out.println("Welcome to 2D Maze");
-        Maze maze = new Maze(5);
+        Maze maze = new Maze(20);
+        maze.generateMaze();
         maze.print();
     }
 }
