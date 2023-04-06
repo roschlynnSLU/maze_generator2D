@@ -66,23 +66,23 @@ class Maze:
                 self.nodes[i].append(i*self.size + j) #Appends a new node to the inner loop of the array
 
         # each node in the graph is connected to UP, DOWN, LEFT, RIGHT (if they exist)
-        for i in range(0, self.size):
-            for j in range(0, self.size):
-                node = self.nodes[i][j]
-                if i > 0:
+        for i in range(0, self.size): #Outer loop to loop through the first node
+            for j in range(0, self.size): #Inner loop to loop through the adjacency nodes
+                node = self.nodes[i][j] #Add the self.nodes every node connected to the node to a node variable
+                if i > 0: #If the current node is not on the top row, the function adds an edge between the current node and the node directly above it. Similarly, if the current node is not on the bottom row, the function adds an edge between the current node and the node directly below it.
                     up = self.nodes[i-1][j]
                     self.graph.add_edge(node, up)
-                if i < self.size-1:
+                if i < self.size-1: #If the current node is not on the leftmost column, the function adds an edge between the current node and the node directly to the left. Similarly, if the current node is not on the rightmost column, the function adds an edge between the current node and the node directly to the right.
                     down = self.nodes[i+1][j]
                     self.graph.add_edge(node, down)
-                if j > 0:
+                if j > 0: #The edges are added to the graph using the self.graph.add_edge() function, which was previously defined.
                     left = self.nodes[i][j-1]
                     self.graph.add_edge(node, left)
                 if j < self.size-1:
                     right = self.nodes[i][j+1]
-                    self.graph.add_edge(node, right)
+                    self.graph.add_edge(node, right) #After the function completes execution, the self.graph adjacency list will represent a grid graph of size self.size with edges connecting adjacent nodes.
     
-    def generate_maze(self):
+    def generate_maze(self): #Use all above functions to execute and return a new maze
         spanning_tree = self.graph.get_spanning_tree(0)
         for i in range(0, self.graph.num_nodes):
             for j in range(0, self.graph.num_nodes):
