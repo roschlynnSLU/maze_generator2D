@@ -49,9 +49,7 @@ class Graph:
                 stack.pop() #Pop the stack
 
         return spanning_tree #Return spanning tree to the function
-
-
-
+    
 class Maze:
     def __init__(self, size): #Initialize of the maze with the given size
         self.size = size #Setting self.size to size
@@ -83,17 +81,17 @@ class Maze:
                     self.graph.add_edge(node, right) #After the function completes execution, the self.graph adjacency list will represent a grid graph of size self.size with edges connecting adjacent nodes.
     
     def generate_maze(self): #Use all above functions to execute and return a new maze
-        spanning_tree = self.graph.get_spanning_tree(0)
-        for i in range(0, self.graph.num_nodes):
-            for j in range(0, self.graph.num_nodes):
-                if spanning_tree.has_edge(i, j):
-                    self.graph.remove_edge(i, j);
+        spanning_tree = self.graph.get_spanning_tree(0) #Call the spanning tree function to start from node 0
+        for i in range(0, self.graph.num_nodes): #Loop through the keys first
+            for j in range(0, self.graph.num_nodes): #Then loop through the values of the keys first
+                if spanning_tree.has_edge(i, j): #Check if an edge exists between the two 
+                    self.graph.remove_edge(i, j) #Remove that edge if node exists
                     
-    def print(self):
-        result = ' '+('_ ' * (self.size-1))+'_\n'
-        for i in range(self.size):
-            result+='|'
-            for j in range(self.size):
+    def print(self): #Print the end result that is the maze
+        result = ' '+('_ ' * (self.size-1))+'_\n' #Top Line or the result string which will contain the maze
+        for i in range(self.size): #First loop through the keys
+            result+='|' #Set as starting result
+            for j in range(self.size): #Then loop through the values
                 node = self.nodes[i][j]
                 # check the floor (bottom wall)
                 if i < self.size-1 and self.graph.has_edge(node, self.nodes[i+1][j]):
@@ -113,10 +111,8 @@ class Maze:
             result+='|\n'
         print(result)
 
-
-
-
 maze = Maze(20)
 maze.generate_maze()
 maze.print()
 print("Welcome to 2D maze")
+print("Printing Maze Solution:-")
