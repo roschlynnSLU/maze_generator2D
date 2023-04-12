@@ -50,11 +50,32 @@ class Graph:
 
         return spanning_tree #Return spanning tree to the function
     
+    def get_solution_maze(self, start_node):
+        visited = [False] * self.num_nodes
+        ending_node = self.num_nodes - 1
+        print(ending_node)
+        print(start_node)
+        queue = []
+        queue.append(start_node)
+        visited[start_node] = True
+        paths_found = []
+        while queue:
+            s = queue.pop(0)
+            paths_found.append(s)
+            if s == ending_node:
+                break
+            for i in self.graph[s]:
+                if not visited[i]:
+                    queue.append(i)
+                    visited[i] = True
+        return paths_found
+    
 class Maze:
     def __init__(self, size): #Initialize of the maze with the given size
         self.size = size #Setting self.size to size
         self.nodes = [] #Defining an empty nodes array
-        self.graph = Graph(size*size) #Define the size of the graph as a square instead of a rectangle
+        self.graph_one = Graph(size*size) #Define the size of the graph as a square instead of a rectangle4
+        self.graph_two = Graph(size*size) #Second Graph to store the removed edges
 
         # label the nodes from 0 to (N*N)-1
         #This function creates a 2D array of nodes for the graph
@@ -69,23 +90,27 @@ class Maze:
                 node = self.nodes[i][j] #Add the self.nodes every node connected to the node to a node variable
                 if i > 0: #If the current node is not on the top row, the function adds an edge between the current node and the node directly above it. Similarly, if the current node is not on the bottom row, the function adds an edge between the current node and the node directly below it.
                     up = self.nodes[i-1][j]
-                    self.graph.add_edge(node, up)
+                    self.graph_one.add_edge(node, up)
                 if i < self.size-1: #If the current node is not on the leftmost column, the function adds an edge between the current node and the node directly to the left. Similarly, if the current node is not on the rightmost column, the function adds an edge between the current node and the node directly to the right.
                     down = self.nodes[i+1][j]
-                    self.graph.add_edge(node, down)
+                    self.graph_one.add_edge(node, down)
                 if j > 0: #The edges are added to the graph using the self.graph.add_edge() function, which was previously defined.
                     left = self.nodes[i][j-1]
-                    self.graph.add_edge(node, left)
+                    self.graph_one.add_edge(node, left)
                 if j < self.size-1:
                     right = self.nodes[i][j+1]
-                    self.graph.add_edge(node, right) #After the function completes execution, the self.graph adjacency list will represent a grid graph of size self.size with edges connecting adjacent nodes.
+                    self.graph_one.add_edge(node, right) #After the function completes execution, the self.graph adjacency list will represent a grid graph of size self.size with edges connecting adjacent nodes.
     
     def generate_maze(self): #Use all above functions to execute and return a new maze
-        spanning_tree = self.graph.get_spanning_tree(0) #Call the spanning tree function to start from node 0
-        for i in range(0, self.graph.num_nodes): #Loop through the keys first
-            for j in range(0, self.graph.num_nodes): #Then loop through the values of the keys first
+        paths = []
+        spanning_tree = self.graph_one.get_spanning_tree(0) #Call the spanning tree function to start from node 0
+        for i in range(0, self.graph_one.num_nodes): #Loop through the keys first
+            for j in range(0, self.graph_one.num_nodes): #Then loop through the values of the keys first
                 if spanning_tree.has_edge(i, j): #Check if an edge exists between the two 
-                    self.graph.remove_edge(i, j) #Remove that edge if node exists
+                    self.graph_one.remove_edge(i, j) #Remove that edge if node exists
+                    self.graph_two.add_edge(i, j) #Add the removed edges to the second graph
+        paths = Graph.get_solution_maze(self.graph_two, 0)
+        print("Solution for this maze is: ", paths)
                     
     def print(self): #Print the end result that is the maze
         result = ' '+('_ ' * (self.size-1))+'_\n' #Top Line or the result string which will contain the maze
@@ -94,7 +119,7 @@ class Maze:
             for j in range(self.size): #Then loop through the values
                 node = self.nodes[i][j]
                 # check the floor (bottom wall)
-                if i < self.size-1 and self.graph.has_edge(node, self.nodes[i+1][j]):
+                if i < self.size-1 and self.graph_one.has_edge(node, self.nodes[i+1][j]):
                     result+='_'
                 elif (i == self.size-1):
                     result+='_'
@@ -102,7 +127,7 @@ class Maze:
                     result+=' '
 
                 # check the right wall
-                if j < self.size-1 and self.graph.has_edge(node, self.nodes[i][j+1]):
+                if j < self.size-1 and self.graph_one.has_edge(node, self.nodes[i][j+1]):
                     result+='|'
                 elif i < self.size-1 and j < self.size-1:
                     result+=' '
@@ -111,29 +136,13 @@ class Maze:
             result+='|\n'
         print(result)
     
-    def get_solution(self):
-        start_node = 0
-        end_node = (maze.size * maze.size) - 1
-        visited_array = [False] * ((maze.size * maze.size) - 1)
-        queue = []
-        queue.append(start_node)
-        path_found = []
-        visited_array[start_node] = True
-        while queue:
-            s = queue.pop()
-            path_found.append(s)
-            if start_node == end_node:
-                path_found.append(end_node)
-                break
-            else:
-                for i in maze.graph.graph[s]:
-                    if not visited_array[i]:
-                        queue.append(i)
-                        visited_array[i] = True
-        return path_found
+    def printing(self):
+        print(self.graph_two)
+        print(self.graph_one)
 
-maze = Maze(20)
+maze = Maze(5)
 maze.generate_maze()
 maze.print()
-paths = maze.get_solution()
-print(paths)
+#paths = maze.get_solution(0)
+#print(paths)
+#print(maze.printing())
