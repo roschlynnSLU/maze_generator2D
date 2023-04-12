@@ -110,7 +110,30 @@ class Maze:
                     result+='_'
             result+='|\n'
         print(result)
+    
+    def get_solution(self):
+        start_node = 0
+        end_node = (maze.size * maze.size) - 1
+        visited_array = [False] * ((maze.size * maze.size) - 1)
+        queue = []
+        queue.append(start_node)
+        path_found = []
+        visited_array[start_node] = True
+        while queue:
+            s = queue.pop()
+            path_found.append(s)
+            if start_node == end_node:
+                path_found.append(end_node)
+                break
+            else:
+                for i in maze.graph.graph[s]:
+                    if not visited_array[i]:
+                        queue.append(i)
+                        visited_array[i] = True
+        return path_found
 
 maze = Maze(20)
 maze.generate_maze()
 maze.print()
+paths = maze.get_solution()
+print(paths)
